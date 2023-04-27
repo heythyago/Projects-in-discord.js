@@ -4,8 +4,7 @@
 process.noDeprecation = true;
 const fs = require("node:fs");
 const path = require("node:path")
-const { Client, ChannelType, GatewayIntentBits, EmbedBuilder, PermissionsBitField, ActivityType, PermissionFlagsBits, Permissions, MessageManager, Embed, Collection, Events, GuildMember, GuildHubType, AuditLogEvent, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { AuditLogAction } = require('discord.js');
+const { Client, ChannelType, GatewayIntentBits, EmbedBuilder, PermissionsBitField, ActivityType, PermissionFlagsBits, Permissions, MessageManager, Embed, Collection, Events, GuildMember, GuildHubType, AuditLogEvent, ActionRowBuilder, ButtonBuilder, ButtonStyle, AuditLogAction } = require('discord.js');
 const Discord = require("discord.js")
 const { REST, Routes } = require('discord.js');
 const { clientId, token, ownerID } = require('./config.json');
