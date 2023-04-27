@@ -74,3 +74,17 @@ client.on(Events.InteractionCreate, interaction => {
         interaction.reply({content: 'Bot had some error'})
     }
 })
+
+client.on(Events.ClientReady, async (c) => {
+    console.log("The bot has been turned on.") 
+    console.log("MADE BY HEYTHYAGO | ! Thiago.#6985")
+
+
+    client.user.setPresence({
+        activities: [{ name: `github.com/heythyago/`, type: ActivityType.Playing }],
+        status: 'dnd',
+      });
+});
+
+
+client.login(token)
