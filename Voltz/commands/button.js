@@ -17,7 +17,7 @@ module.exports = {
         .addComponents(
             new ButtonBuilder()
                 .setCustomId('buttontest')
-                .setLabel('Hello, I'm a button')
+                .setLabel('Hello, Im a button')
                 .setStyle(ButtonStyle.Primary)
                 .setEmoji('👋'),
         );
