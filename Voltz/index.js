@@ -74,6 +74,19 @@ client.on(Events.InteractionCreate, interaction => {
     }
 })
 
+client.on('interactionCreate', async interaction => {
+  if (!interaction.isSelectMenu() || interaction.customId !== 'testoption') return;
+  const selectedOption = interaction.values[0];
+    if (selectedOption === 'heythyago') {
+      await interaction.reply({content: `Hey, you clicked on the https://github.com/heythyago/ option`});
+      await interaction.deferUpdate();
+    }
+    if (selectedOption === 'testthyago') {
+      await interaction.reply({content: `Hey, you clicked on the \`This message can be changed.\` option`});
+      await interaction.deferUpdate();
+    }
+});
+
 client.on(Events.ClientReady, async (c) => {
     console.log("The bot has been turned on.") 
     console.log("MADE BY HEYTHYAGO | ! Thiago.#6985")
