@@ -28,6 +28,7 @@ module.exports = {
 					.setDescription('This one too.')
                                         .setEmoji('🤖')
 					.setValue('testthyago'),
+					)
             const row = new ActionRowBuilder()
 			.addComponents(select);
 canal.send({content: `This message can be changed.`, components: [row]})
