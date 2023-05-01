@@ -74,7 +74,7 @@ client.on(Events.InteractionCreate, interaction => {
     }
 })
 
-client.on('interactionCreate', async interaction => {
+client.on('interactionCreate', async interaction => { // System made by HeyThyago | ! Thiago.#6985
   if (!interaction.isSelectMenu() || interaction.customId !== 'testoption') return;
   const selectedOption = interaction.values[0];
     if (selectedOption === 'heythyago') {
@@ -86,6 +86,15 @@ client.on('interactionCreate', async interaction => {
       await interaction.deferUpdate();
     }
 });
+client.on('interactionCreate', async interaction => { // System made by HeyThyago | ! Thiago.#6985
+  if (interaction.isButton()) {
+    const customId = interaction.customId;
+
+    if (customId === 'buttontest') { //We are calling that button that we created with that id.
+	    interaction.reply({content: `Hey, you clicked the button!`}) //Here, you can put whatever you want to happen when someone presses the button with this id.
+    }
+  }
+  });
 
 client.on(Events.ClientReady, async (c) => {
     console.log("The bot has been turned on.") 
