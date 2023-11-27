@@ -82,6 +82,120 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+
+client.on("interactionCreate", async (interaction) => {
+  const customId = interaction.customId;
+  if (customId === 'CREATE_SPOILER') {
+      const modal = new ModalBuilder()
+          .setCustomId('SPOILER_MODAL')
+          .setTitle('Criar spoiler');
+
+      const msgInput = new TextInputBuilder()
+          .setCustomId('spoiler_pergunta1')
+          .setLabel('Qual o texto do spoiler?')
+          .setStyle(TextInputStyle.Paragraph);
+      const msg2Input = new TextInputBuilder()
+          .setCustomId('spoiler_pergunta2')
+          .setLabel('Qual o texto de exibição??')
+          .setStyle(TextInputStyle.Paragraph);
+      const urlInput = new TextInputBuilder()
+          .setCustomId('spoiler_pergunta3')
+          .setLabel('Link do print que deseja colocar no spoiler:')
+          .setStyle(TextInputStyle.Short);
+
+      const primeiro = new ActionRowBuilder().addComponents(msgInput);
+      const segundo = new ActionRowBuilder().addComponents(msg2Input);
+      const terceiro = new ActionRowBuilder().addComponents(urlInput);
+
+      modal.addComponents(primeiro, segundo, terceiro);
+
+      interaction.showModal(modal)
+  }
+
+  if (customId === 'SHOW_SPOILER') {
+      try {
+          const data = JSON.parse(fs.readFileSync(configsPath, 'utf8'));
+          //verifica se o dados existem
+          if (!data.spoilers) {
+              console.error('Dados de spoiler não encontrados.');
+              return;
+          }
+          const spoilerData = data.spoilers;
+          const { participants } = spoilerData;
+          //verifica se pessoas clicaram no spoiler
+          if (!participants) {
+              console.error('Dados de participantes não encontrados.');
+              return;
+          }
+          const embed = new Discord.EmbedBuilder()
+              .setDescription(spoilerData.msg)
+              .setImage(spoilerData.url)
+              .setColor('GREEN');
+          interaction.reply({embeds: [embed], ephemeral: true });
+          let spoilersCounter = spoilerData.participants.length
+          if (!participants.includes(interaction.user.id)) {
+            participants.push(interaction.user.id);
+            spoilersCounter++;
+        }
+          const row = new ActionRowBuilder()
+              .addComponents(
+                  new ButtonBuilder()
+                      .setCustomId('SHOW_SPOILER')
+                      .setLabel(`Ver spoiler: [${spoilersCounter}]`)
+                      .setStyle(ButtonStyle.Secondary)
+              )
+          try {
+              interaction.message.edit({ components: [row] })
+          } catch (error) {
+              console.log('Não foi possível atualizar o botão agora.');
+          }
+          if (!participants.includes(interaction.user.id)) {
+              participants.push(interaction.user.id);
+          }
+          fs.writeFile(configsPath, JSON.stringify(data, null, 2), (err) => {
+              if (err) {
+                  console.error('Erro ao escrever no arquivo spoiler.json:', err);
+              } else {
+                  console.log(`${interaction.user.username} clicou no spoiler.`);
+              }
+          });
+      } catch (error) {
+          console.error('Erro ao ler ou analisar o arquivo de configurações:', error);
+      }
+  }
+  if (customId === 'SPOILER_MODAL') {
+      const dados = JSON.parse(fs.readFileSync(configsPath, 'utf8'));
+      const msg = interaction.fields.getTextInputValue('spoiler_pergunta1');
+      const msg2 = interaction.fields.getTextInputValue('spoiler_pergunta2');
+      const url = interaction.fields.getTextInputValue('spoiler_pergunta3');
+      dados.spoilers = {
+          msg: msg,
+          url: url,
+          participants: []
+      };
+      fs.writeFile(configsPath, JSON.stringify(dados, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error('Erro ao escrever o arquivo configuravel:', err);
+              return;
+          }
+      });
+      const embed = new Discord.EmbedBuilder()
+          .setTitle('NOVO SPOILER')
+          .setDescription(msg2)
+          .setColor('GREEN')
+      const row = new ActionRowBuilder()
+          .addComponents(
+              new ButtonBuilder()
+                  .setCustomId('SHOW_SPOILER')
+                  .setLabel('Ver spoiler')
+                  .setStyle(ButtonStyle.Secondary)
+          )
+      interaction.reply({ content: 'O Spoiler foi criado.', ephemeral: true })
+      interaction.channel.send({embeds: [embed], components: [row] })
+  }
+
+});
+
   const regex = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|png|gif|webp)/gi; //Codigo ultramente secreto
   const CARGOCEO = '1234567890'; // Cargo que você quer que possa mandar links no servidor.
 
